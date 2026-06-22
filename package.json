@@ -1,0 +1,23 @@
+{
+  "name": "com.deucarian.weapon-systems",
+  "version": "0.1.0",
+  "displayName": "Deucarian Weapon Systems",
+  "description": "Reusable weapon orchestration for active weapon slots, fire cadence, direct/projectile modes, and deterministic weapon intents.",
+  "unity": "6000.3",
+  "author": {
+    "name": "Deucarian"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "com.deucarian.gameplay-foundation": "0.1.0",
+    "com.deucarian.attacks": "0.1.0",
+    "com.deucarian.projectiles": "0.2.0"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Weapon Runtime",
+      "description": "Creates one direct weapon and one projectile weapon and emits deterministic fire intents.",
+      "path": "Samples~/BasicWeaponRuntime"
+    }
+  ]
+}
