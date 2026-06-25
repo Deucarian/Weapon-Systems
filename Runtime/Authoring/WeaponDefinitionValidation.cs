@@ -140,7 +140,7 @@ namespace Deucarian.WeaponSystems.Authoring
             }
 
             if (options.RequirePrefab && presentation.Prefab == null)
-                issues.Add(WeaponDefinitionValidationIssue.Error("Presentation.Prefab", "Choose a weapon/tower prefab or model before creating this asset."));
+                issues.Add(WeaponDefinitionValidationIssue.Warning("Presentation.Prefab", "Prefab/model is not assigned. The weapon remains data-valid, and presentation can be added later."));
         }
     }
 }

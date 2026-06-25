@@ -1,6 +1,7 @@
 using System;
 using Deucarian.Attacks.Authoring;
 using Deucarian.GameContentAuthoring.Editor;
+using Deucarian.WeaponSystems.Editor;
 using Deucarian.WeaponSystems.Authoring;
 using NUnit.Framework;
 using UnityEditor;
@@ -63,7 +64,7 @@ namespace Deucarian.WeaponSystems.Tests
         }
 
         [Test]
-        public void WeaponValidationRejectsMissingAttackAndPrefabForCreation()
+        public void WeaponValidationRejectsMissingAttackAndWarnsForMissingPrefabForCreation()
         {
             WeaponDefinitionAsset weapon = WeaponDefinitionAsset.CreateTransient(
                 "weapon.authoring.invalid",
@@ -78,8 +79,8 @@ namespace Deucarian.WeaponSystems.Tests
                 WeaponDefinitionValidationReport report = WeaponDefinitionValidator.Validate(weapon, WeaponDefinitionValidationOptions.AssetCreation);
 
                 Assert.IsFalse(report.IsValid);
-                Assert.That(FindIssue(report, "Stats.Attack"), Is.True);
-                Assert.That(FindIssue(report, "Presentation.Prefab"), Is.True);
+                Assert.That(FindIssue(report, "Stats.Attack", WeaponDefinitionValidationSeverity.Error), Is.True);
+                Assert.That(FindIssue(report, "Presentation.Prefab", WeaponDefinitionValidationSeverity.Warning), Is.True);
             }
             finally
             {
@@ -87,6 +88,67 @@ namespace Deucarian.WeaponSystems.Tests
                 Object.DestroyImmediate(weapon.Stats);
                 Object.DestroyImmediate(weapon);
             }
+        }
+
+        [Test]
+        public void WeaponValidationAllowsDataOnlyPrefabWhenAttackIsValid()
+        {
+            AttackDefinitionAsset attack = AttackDefinitionAsset.CreateTransient(
+                "attack.weapon.authoring.data-only",
+                "Data Only Attack",
+                AttackRecipeDeliveryMode.Hitscan,
+                "damage.test",
+                5,
+                0,
+                8,
+                AttackRecipeTargetingMode.Nearest);
+            WeaponDefinitionAsset weapon = WeaponDefinitionAsset.CreateTransient(
+                "weapon.authoring.data-only",
+                "Data Only Weapon",
+                WeaponFireMode.DirectAttack,
+                attack,
+                10,
+                8f);
+
+            try
+            {
+                WeaponDefinitionValidationReport report = WeaponDefinitionValidator.Validate(weapon, WeaponDefinitionValidationOptions.AssetCreation);
+
+                Assert.IsTrue(report.IsValid);
+                Assert.That(FindIssue(report, "Presentation.Prefab", WeaponDefinitionValidationSeverity.Warning), Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(weapon.Presentation);
+                Object.DestroyImmediate(weapon.Stats);
+                Object.DestroyImmediate(weapon);
+                Object.DestroyImmediate(attack.Presentation);
+                Object.DestroyImmediate(attack.StatusEffects);
+                Object.DestroyImmediate(attack.Delivery);
+                Object.DestroyImmediate(attack.Targeting);
+                Object.DestroyImmediate(attack.Mechanics);
+                Object.DestroyImmediate(attack);
+            }
+        }
+
+        [Test]
+        public void WeaponPreviewSummaryHandlesMissingOptionalAssets()
+        {
+            var state = new WeaponAuthoringState
+            {
+                Attack = null,
+                Prefab = null,
+                PlacementAudio = null,
+                PlacementVfxPrefab = null
+            };
+
+            Assert.DoesNotThrow(() =>
+            {
+                Assert.That(WeaponGameContentPreviewSummaries.BuildWeaponRows(state).Count, Is.GreaterThan(0));
+                Assert.That(WeaponGameContentPreviewSummaries.BuildAttackRows(state).Count, Is.GreaterThan(0));
+                Assert.That(WeaponGameContentPreviewSummaries.BuildWarnings(state).Count, Is.GreaterThan(0));
+                StringAssert.Contains("no attack assigned", WeaponGameContentPreviewSummaries.PreviewWeaponFire(state));
+            });
         }
 
         [Test]
@@ -117,10 +179,10 @@ namespace Deucarian.WeaponSystems.Tests
             }
         }
 
-        private static bool FindIssue(WeaponDefinitionValidationReport report, string path)
+        private static bool FindIssue(WeaponDefinitionValidationReport report, string path, WeaponDefinitionValidationSeverity? severity = null)
         {
             for (int i = 0; i < report.Issues.Count; i++)
-                if (report.Issues[i].Path == path)
+                if (report.Issues[i].Path == path && (!severity.HasValue || report.Issues[i].Severity == severity.Value))
                     return true;
             return false;
         }
