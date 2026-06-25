@@ -1,0 +1,19 @@
+{
+  "name": "Deucarian.WeaponSystems.Authoring",
+  "rootNamespace": "Deucarian.WeaponSystems.Authoring",
+  "references": [
+    "Deucarian.WeaponSystems",
+    "Deucarian.Attacks",
+    "Deucarian.Attacks.Authoring",
+    "Deucarian.Projectiles"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

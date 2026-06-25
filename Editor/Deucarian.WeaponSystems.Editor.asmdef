@@ -1,0 +1,21 @@
+{
+  "name": "Deucarian.WeaponSystems.Editor",
+  "rootNamespace": "Deucarian.WeaponSystems.Editor",
+  "references": [
+    "Deucarian.WeaponSystems",
+    "Deucarian.WeaponSystems.Authoring",
+    "Deucarian.Attacks.Authoring",
+    "Deucarian.GameContentAuthoring.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
