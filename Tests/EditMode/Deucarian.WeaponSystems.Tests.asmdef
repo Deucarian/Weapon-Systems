@@ -3,14 +3,18 @@
   "rootNamespace": "Deucarian.WeaponSystems.Tests",
   "references": [
     "Deucarian.WeaponSystems",
+    "Deucarian.WeaponSystems.Authoring",
+    "Deucarian.WeaponSystems.Editor",
     "Deucarian.GameplayFoundation",
     "Deucarian.Combat",
     "Deucarian.Attacks",
+    "Deucarian.Attacks.Authoring",
     "Deucarian.Projectiles",
     "Deucarian.Encounters",
     "Deucarian.DefenseGames",
     "Deucarian.WorldSpawning",
-    "Deucarian.WorldNavigation"
+    "Deucarian.WorldNavigation",
+    "Deucarian.GameContentAuthoring.Editor"
   ],
   "includePlatforms": [
     "Editor"
