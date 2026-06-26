@@ -47,35 +47,35 @@ namespace Deucarian.WeaponSystems.Editor
 
             context.DrawSection("Weapon Identity", () =>
             {
-                _state.WeaponId = EditorGUILayout.TextField("Stable ID", _state.WeaponId);
-                _state.DisplayName = EditorGUILayout.TextField("Display Name", _state.DisplayName);
-                _state.Icon = (Sprite)EditorGUILayout.ObjectField("Icon", _state.Icon, typeof(Sprite), false);
-                _state.TagsCsv = EditorGUILayout.TextField("Tags", _state.TagsCsv);
+                _state.WeaponId = context.DrawTextField("Stable ID", _state.WeaponId);
+                _state.DisplayName = context.DrawTextField("Display Name", _state.DisplayName);
+                _state.Icon = context.DrawObjectField("Icon", _state.Icon);
+                _state.TagsCsv = context.DrawTextField("Tags", _state.TagsCsv);
                 _state.OutputRoot = context.DrawOutputRootField(_state.OutputRoot);
             });
 
             context.DrawSection("Runtime Stats", () =>
             {
-                _state.FireMode = (WeaponFireMode)EditorGUILayout.EnumPopup("Fire Mode", _state.FireMode);
-                _state.Attack = (AttackDefinitionAsset)EditorGUILayout.ObjectField("Attack", _state.Attack, typeof(AttackDefinitionAsset), false);
+                _state.FireMode = context.DrawEnumPopup("Fire Mode", _state.FireMode);
+                _state.Attack = context.DrawObjectField("Attack", _state.Attack);
                 if (_state.FireMode == WeaponFireMode.Projectile)
-                    _state.ProjectileDefinitionId = EditorGUILayout.TextField("Projectile ID Override", _state.ProjectileDefinitionId);
-                _state.CooldownTicks = EditorGUILayout.IntField("Cooldown Ticks", _state.CooldownTicks);
-                _state.Range = EditorGUILayout.FloatField("Range", _state.Range);
-                _state.BuildCost = EditorGUILayout.IntField("Build Cost", _state.BuildCost);
-                _state.BurstCount = EditorGUILayout.IntField("Burst Count", _state.BurstCount);
-                _state.VolleyCount = EditorGUILayout.IntField("Volley Count", _state.VolleyCount);
-                _state.SpreadDegrees = EditorGUILayout.FloatField("Spread Degrees", _state.SpreadDegrees);
-                _state.TargetingRoleId = EditorGUILayout.TextField("Targeting Role", _state.TargetingRoleId);
-                _state.MuzzleRoleId = EditorGUILayout.TextField("Muzzle Role", _state.MuzzleRoleId);
-                _state.UpgradeGroupId = EditorGUILayout.TextField("Upgrade Group", _state.UpgradeGroupId);
+                    _state.ProjectileDefinitionId = context.DrawTextField("Projectile ID Override", _state.ProjectileDefinitionId);
+                _state.CooldownTicks = context.DrawIntField("Cooldown Ticks", _state.CooldownTicks);
+                _state.Range = context.DrawFloatField("Range", _state.Range);
+                _state.BuildCost = context.DrawIntField("Build Cost", _state.BuildCost);
+                _state.BurstCount = context.DrawIntField("Burst Count", _state.BurstCount);
+                _state.VolleyCount = context.DrawIntField("Volley Count", _state.VolleyCount);
+                _state.SpreadDegrees = context.DrawFloatField("Spread Degrees", _state.SpreadDegrees);
+                _state.TargetingRoleId = context.DrawTextField("Targeting Role", _state.TargetingRoleId);
+                _state.MuzzleRoleId = context.DrawTextField("Muzzle Role", _state.MuzzleRoleId);
+                _state.UpgradeGroupId = context.DrawTextField("Upgrade Group", _state.UpgradeGroupId);
             });
 
             context.DrawSection("Presentation", () =>
             {
-                _state.Prefab = (GameObject)EditorGUILayout.ObjectField("Prefab / Model", _state.Prefab, typeof(GameObject), false);
-                _state.PlacementAudio = (AudioClip)EditorGUILayout.ObjectField("Placement Audio", _state.PlacementAudio, typeof(AudioClip), false);
-                _state.PlacementVfxPrefab = (GameObject)EditorGUILayout.ObjectField("Placement VFX", _state.PlacementVfxPrefab, typeof(GameObject), false);
+                _state.Prefab = context.DrawObjectField("Prefab / Model", _state.Prefab);
+                _state.PlacementAudio = context.DrawObjectField("Placement Audio", _state.PlacementAudio);
+                _state.PlacementVfxPrefab = context.DrawObjectField("Placement VFX", _state.PlacementVfxPrefab);
             });
 
             context.DrawSection("Preview", () =>
