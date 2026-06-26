@@ -5,6 +5,7 @@
     "Deucarian.WeaponSystems",
     "Deucarian.WeaponSystems.Authoring",
     "Deucarian.Attacks.Authoring",
+    "Deucarian.GameplayFoundation",
     "Deucarian.GameContentAuthoring.Editor"
   ],
   "includePlatforms": [
