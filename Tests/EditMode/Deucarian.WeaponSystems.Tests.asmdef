@@ -5,6 +5,7 @@
     "Deucarian.WeaponSystems",
     "Deucarian.WeaponSystems.Authoring",
     "Deucarian.WeaponSystems.Editor",
+    "Deucarian.Editor",
     "Deucarian.GameplayFoundation",
     "Deucarian.Combat",
     "Deucarian.Attacks",

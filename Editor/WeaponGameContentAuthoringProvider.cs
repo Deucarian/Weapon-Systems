@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Deucarian.Attacks.Authoring;
+using Deucarian.Editor;
 using Deucarian.GameContentAuthoring.Editor;
 using Deucarian.WeaponSystems.Authoring;
 using UnityEditor;
@@ -18,19 +19,30 @@ namespace Deucarian.WeaponSystems.Editor
         }
     }
 
-    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider
+    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider, IGameContentAuthoringSurfaceProvider
     {
         private readonly WeaponAuthoringState _state = new WeaponAuthoringState();
         private readonly WeaponGameContentPreviewController _preview = new WeaponGameContentPreviewController();
+        private readonly WeaponProviderV2State _v2State = new WeaponProviderV2State();
+        private readonly WeaponProviderV2View _v2View = new WeaponProviderV2View();
 
         public string ProviderId => "com.deucarian.weapon-systems.weapon";
         public string DisplayName => "Tower / Weapon";
         public string Description => "Create a root WeaponDefinition with stats and presentation sections.";
         public int SortOrder => 130;
         public bool Enabled => true;
-        public void OnSelected() { }
+        public void OnSelected() { _v2State.ResetProviderSession(); }
         public void DrawPreview(GameContentAuthoringPreviewContext context) { _preview.Draw(context, _state); }
-        public void StopPreview() { _preview.Stop(); }
+        public void StopPreview()
+        {
+            _preview.Stop();
+            _v2State.StopPreview();
+        }
+
+        public void DrawCustomAuthoringSurface(GameContentAuthoringSurfaceContext context)
+        {
+            _v2View.Draw(context, _state, _preview, _v2State);
+        }
 
         public void Draw(GameContentAuthoringContext context)
         {
@@ -276,6 +288,24 @@ namespace Deucarian.WeaponSystems.Editor
             return new GameContentAuthoringValidationResult(issues);
         }
 
+        public static GameContentAuthoringValidationResult ValidateForUpdate(WeaponAuthoringState state, WeaponDefinitionAsset existingAsset)
+        {
+            WeaponDefinitionAsset recipe = BuildRecipe(state, true);
+            try
+            {
+                var issues = ToSharedIssues(WeaponDefinitionValidator.Validate(recipe, WeaponDefinitionValidationOptions.AssetCreation));
+                if (existingAsset == null)
+                    issues.Add(GameContentAuthoringValidationIssue.Error("Weapon", "Select a weapon asset before saving."));
+                if (GameContentAuthoringEditorAssets.HasDuplicateIdExcept<WeaponDefinitionAsset>(state.WeaponId, existingAsset, asset => asset.Id))
+                    issues.Add(GameContentAuthoringValidationIssue.Error("Weapon.Id", "Weapon IDs must be unique. Another weapon already uses this stable ID."));
+                return new GameContentAuthoringValidationResult(issues);
+            }
+            finally
+            {
+                DestroyTransient(recipe);
+            }
+        }
+
         public static IReadOnlyList<string> GetPreviewLines(WeaponAuthoringState state)
         {
             return new[]
@@ -326,6 +356,31 @@ namespace Deucarian.WeaponSystems.Editor
             return new GameContentCreationResult(true, "Created weapon definition at " + rootPath, AssetDatabase.LoadAssetAtPath<WeaponDefinitionAsset>(rootPath));
         }
 
+        public static GameContentCreationResult UpdateExistingAsset(WeaponDefinitionAsset root, WeaponAuthoringState state)
+        {
+            GameContentAuthoringValidationResult report = ValidateForUpdate(state, root);
+            if (!report.IsValid)
+                return new GameContentCreationResult(false, "Fix validation errors before saving this weapon.", root);
+
+            if (root == null)
+                return new GameContentCreationResult(false, "Select a weapon asset before saving.", null);
+
+            WeaponStatsDefinitionAsset stats = EnsureSectionAsset(root, root.Stats, "Stats");
+            WeaponPresentationDefinitionAsset presentation = EnsureSectionAsset(root, root.Presentation, "Presentation");
+
+            Undo.RecordObjects(new UnityEngine.Object[] { root, stats, presentation }, "Save Weapon Definition");
+            stats.Configure(state.FireMode, state.Attack, state.ProjectileDefinitionId, state.CooldownTicks, state.Range, state.BurstCount, state.VolleyCount, state.SpreadDegrees, state.BuildCost, state.TargetingRoleId, state.MuzzleRoleId);
+            presentation.Configure(state.Prefab, state.PlacementAudio, state.PlacementVfxPrefab);
+            root.Configure(state.WeaponId, state.DisplayName, state.Icon, GameContentAuthoringEditorAssets.SplitCsv(state.TagsCsv), state.UpgradeGroupId, stats, presentation, root.BalancingNotes);
+
+            MarkDirty(stats);
+            MarkDirty(presentation);
+            MarkDirty(root);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            return new GameContentCreationResult(true, "Saved weapon definition " + root.Id + ".", root);
+        }
+
         public static void DestroyTransient(WeaponDefinitionAsset recipe)
         {
             if (recipe == null || recipe.hideFlags != HideFlags.HideAndDontSave) return;
@@ -352,6 +407,22 @@ namespace Deucarian.WeaponSystems.Editor
             presentation.Configure(state.Prefab, state.PlacementAudio, state.PlacementVfxPrefab);
             root.Configure(state.WeaponId, state.DisplayName, state.Icon, GameContentAuthoringEditorAssets.SplitCsv(state.TagsCsv), state.UpgradeGroupId, stats, presentation);
             return root;
+        }
+
+        private static T EnsureSectionAsset<T>(WeaponDefinitionAsset root, T existing, string suffix) where T : ScriptableObject
+        {
+            if (existing != null)
+                return existing;
+
+            T section = ScriptableObject.CreateInstance<T>();
+            GameContentAuthoringEditorAssets.AddSubAsset(section, root, root.name + "_" + suffix);
+            return section;
+        }
+
+        private static void MarkDirty(UnityEngine.Object target)
+        {
+            if (target != null)
+                EditorUtility.SetDirty(target);
         }
 
         private static string GetWeaponFolder(WeaponAuthoringState state)
