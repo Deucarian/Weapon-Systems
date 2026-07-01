@@ -1,0 +1,27 @@
+{
+  "packageId": "com.deucarian.weapon-systems",
+  "displayName": "Deucarian Weapon Systems",
+  "ownedCapabilities": [],
+  "runtimeAssemblies": [
+    "Deucarian.WeaponSystems",
+    "Deucarian.WeaponSystems.Authoring"
+  ],
+  "editorAssemblies": [
+    "Deucarian.WeaponSystems.Editor"
+  ],
+  "sampleAssemblies": [],
+  "testAssemblies": [
+    "Deucarian.WeaponSystems.Tests"
+  ],
+  "requiredDependencies": [
+    "com.deucarian.gameplay-foundation",
+    "com.deucarian.attacks",
+    "com.deucarian.editor",
+    "com.deucarian.projectiles",
+    "com.deucarian.game-content-authoring"
+  ],
+  "optionalVersionDefinedDependencies": [],
+  "allowedDirectDebugCalls": [],
+  "allowedDirectUnityObjectLifetimeCalls": [],
+  "expectedSamplesRoot": "Samples~"
+}
