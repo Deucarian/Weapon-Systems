@@ -23,6 +23,14 @@ The package has no runtime dependency on Defense Games, Encounters, World Spawni
 
 See `Samples~/BasicWeaponRuntime`.
 
+## Game Content Authoring
+
+Weapon Systems contributes the `Weapon / Tower` lens to `Tools/Deucarian/Game Content Authoring`. The lens matches either the Weapon or Tower capability; games are not required to expose both. It displays immutable projected fire mode, damage, cooldown, range, targeting, payload, area, rank path, mutation/evolution links, and presentation data from the globally selected content pack.
+
+External JSON-backed records are read-only and keep their canonical pack-scoped identity when opened in another compatible lens such as Attacks. Missing prefab or VFX data uses an authored-value preview fallback. Template packages provide `IGameContentRecordProjectionAdapter<WeaponContentRecordProjection>` adapters, so Weapon Systems does not parse game-specific formats or depend on a template.
+
+Selecting `Project Content` preserves the existing standalone `WeaponDefinitionAsset` creation and editing workflow under `Assets/GameContent`. Creation is unavailable for read-only packs, All Packs, and contexts without an explicit writable backend.
+
 ## Install
 
 Stable:

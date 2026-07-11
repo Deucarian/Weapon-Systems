@@ -19,19 +19,27 @@ namespace Deucarian.WeaponSystems.Editor
         }
     }
 
-    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider, IGameContentAuthoringSurfaceProvider
+    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider, IGameContentAuthoringSurfaceProvider, IGameContentAuthoringLensProvider
     {
         private readonly WeaponAuthoringState _state = new WeaponAuthoringState();
         private readonly WeaponGameContentPreviewController _preview = new WeaponGameContentPreviewController();
         private readonly WeaponProviderV2State _v2State = new WeaponProviderV2State();
         private readonly WeaponProviderV2View _v2View = new WeaponProviderV2View();
+        private readonly WeaponPackAwareLensState _packState = new WeaponPackAwareLensState();
 
         public string ProviderId => "com.deucarian.weapon-systems.weapon";
-        public string DisplayName => "Tower / Weapon";
-        public string Description => "Create a root WeaponDefinition with stats and presentation sections.";
+        public string DisplayName => "Weapon / Tower";
+        public string Description => "Inspect Weapon- or Tower-capable records or author standalone Weapon assets in Project Content.";
         public int SortOrder => 130;
         public bool Enabled => true;
-        public void OnSelected() { _v2State.ResetProviderSession(); }
+        public GameContentLensDescriptor Lens { get; } = new GameContentLensDescriptor(
+            "weapon-tower",
+            "Weapon / Tower",
+            "Combat",
+            "weapon",
+            110,
+            new[] { GameContentRecordCapabilities.Weapon, GameContentRecordCapabilities.Tower });
+        public void OnSelected() { _v2State.ResetProviderSession(); _packState.Browser.SearchText = string.Empty; }
         public void DrawPreview(GameContentAuthoringPreviewContext context) { _preview.Draw(context, _state); }
         public void StopPreview()
         {
@@ -41,6 +49,11 @@ namespace Deucarian.WeaponSystems.Editor
 
         public void DrawCustomAuthoringSurface(GameContentAuthoringSurfaceContext context)
         {
+            if (context.PackContext != null && !context.PackContext.IsProjectContent)
+            {
+                WeaponPackAwareLensView.Draw(context, Lens, _packState);
+                return;
+            }
             _v2View.Draw(context, _state, _preview, _v2State);
         }
 
