@@ -1,6 +1,7 @@
 {
   "packageId": "com.deucarian.weapon-systems",
   "displayName": "Deucarian Weapon Systems",
+  "samplePolicy": "playable-scene",
   "ownedCapabilities": [],
   "runtimeAssemblies": [
     "Deucarian.WeaponSystems",
@@ -9,7 +10,9 @@
   "editorAssemblies": [
     "Deucarian.WeaponSystems.Editor"
   ],
-  "sampleAssemblies": [],
+  "sampleAssemblies": [
+    "Deucarian.WeaponSystems.Samples"
+  ],
   "testAssemblies": [
     "Deucarian.WeaponSystems.Tests"
   ],
