@@ -11,36 +11,8 @@ using UnityEngine;
 
 namespace Deucarian.WeaponSystems.Editor
 {
-    internal sealed class WeaponProviderV2State
+    internal sealed class WeaponProviderV2State : GameContentAuthoringProviderSessionState<WeaponAuthoringState>
     {
-        public string SearchText = string.Empty;
-        public bool Creating;
-        public int DetailPage;
-        public int WizardStep;
-        public Vector2 ListScroll;
-        public Vector2 DetailScroll;
-        public Vector2 PreviewScroll;
-        public bool PreviewMuted = true;
-        public bool PreviewLoop = true;
-        public float PreviewSpeed = 1f;
-        public bool PreviewPlaying = true;
-        public GameContentAuthoringActionPreviewRenderMode PreviewRenderMode = GameContentAuthoringActionPreviewRenderMode.Game;
-        public double PreviewStartTime;
-        public float PausedNormalizedTime = 0.5f;
-        public string ActivePreviewKey = string.Empty;
-        public string PreviewStatus = "Preview idle";
-        public WeaponAuthoringState EditingState;
-        public GameContentAuthoringObjectEditorContext EditingContext;
-        public GameContentCreationResult LastEditResult;
-
-        public void StopPreview()
-        {
-            PreviewPlaying = false;
-            PreviewStartTime = 0d;
-            PausedNormalizedTime = 0.5f;
-            PreviewStatus = "Preview stopped";
-        }
-
         public void BeginCreate()
         {
             Creating = true;
@@ -48,40 +20,6 @@ namespace Deucarian.WeaponSystems.Editor
             WizardStep = 0;
             ClearEditingState();
             PreviewStatus = "Previewing draft weapon";
-        }
-
-        public void ResetProviderSession()
-        {
-            Creating = false;
-            DetailPage = 0;
-            WizardStep = 0;
-            ListScroll = Vector2.zero;
-            DetailScroll = Vector2.zero;
-            PreviewScroll = Vector2.zero;
-            ActivePreviewKey = string.Empty;
-            PreviewStatus = "Preview idle";
-            ClearEditingState();
-        }
-
-        public void SetPreviewSource(string key, WeaponGameContentPreviewController controller)
-        {
-            key = key ?? string.Empty;
-            if (string.Equals(ActivePreviewKey, key, StringComparison.Ordinal))
-                return;
-
-            controller?.Stop();
-            ActivePreviewKey = key;
-            PreviewPlaying = true;
-            PreviewStartTime = EditorApplication.timeSinceStartup;
-            PausedNormalizedTime = 0f;
-            PreviewStatus = "Previewing";
-        }
-
-        public void ClearEditingState()
-        {
-            EditingState = null;
-            EditingContext = null;
-            LastEditResult = null;
         }
     }
 
@@ -176,7 +114,7 @@ namespace Deucarian.WeaponSystems.Editor
                 : context.SelectedItem == null
                     ? string.Empty
                     : context.SelectedItem.Key;
-            state.SetPreviewSource(key, previewController);
+            state.SetPreviewSource(key, () => previewController?.Stop());
         }
 
         private static void DrawWeaponList(GameContentAuthoringSurfaceContext context, WeaponProviderV2State state, IReadOnlyList<WeaponProviderV2ListItem> items)
@@ -309,7 +247,9 @@ namespace Deucarian.WeaponSystems.Editor
                     break;
             }
 
-            DrawValidationIssues(validation);
+            GameContentAuthoringProviderGUI.DrawValidationIssues(
+                validation,
+                GameContentAuthoringValidationSummaryStyle.Counts);
         }
 
         private static void HandleEditCommand(GameContentAuthoringSurfaceContext context, WeaponProviderV2State state, WeaponDefinitionAsset asset, GameContentAuthoringCommand command)
@@ -387,7 +327,9 @@ namespace Deucarian.WeaponSystems.Editor
                     break;
             }
 
-            DrawValidationIssues(validation);
+            GameContentAuthoringProviderGUI.DrawValidationIssues(
+                validation,
+                GameContentAuthoringValidationSummaryStyle.Counts);
             context.Authoring.DrawCreationResult();
         }
 
@@ -725,34 +667,6 @@ namespace Deucarian.WeaponSystems.Editor
             };
         }
 
-        private static void DrawValidationIssues(GameContentAuthoringValidationResult validation)
-        {
-            if (validation == null || validation.Issues.Count == 0)
-                return;
-
-            var messages = new List<string>();
-            for (int i = 0; i < validation.Issues.Count; i++)
-            {
-                GameContentAuthoringValidationIssue issue = validation.Issues[i];
-                messages.Add((string.IsNullOrWhiteSpace(issue.Path) ? string.Empty : issue.Path + ": ") + issue.Message);
-            }
-
-            DeucarianEditorStatus status = validation.ErrorCount > 0
-                ? DeucarianEditorStatus.Error
-                : validation.WarningCount > 0
-                    ? DeucarianEditorStatus.Warning
-                    : DeucarianEditorStatus.Info;
-            DeucarianEditorStatusPanel.DrawValidationCard(BuildValidationSummary(validation), messages, status);
-        }
-
-        private static string BuildValidationSummary(GameContentAuthoringValidationResult validation)
-        {
-            if (validation == null)
-                return string.Empty;
-            return validation.ErrorCount.ToString(CultureInfo.InvariantCulture) + " blocker(s), "
-                + validation.WarningCount.ToString(CultureInfo.InvariantCulture) + " warning(s).";
-        }
-
         private static IReadOnlyList<GameContentAuthoringPreviewRow> WeaponRows(params GameContentAuthoringPreviewRow[] rows)
         {
             return rows;
@@ -760,15 +674,12 @@ namespace Deucarian.WeaponSystems.Editor
 
         private static void DrawSummaryRows(params GameContentAuthoringPreviewRow[] rows)
         {
-            DrawSummaryRows((IReadOnlyList<GameContentAuthoringPreviewRow>)rows);
+            GameContentAuthoringProviderGUI.DrawSummaryRows((IReadOnlyList<GameContentAuthoringPreviewRow>)rows, true);
         }
 
         private static void DrawSummaryRows(IReadOnlyList<GameContentAuthoringPreviewRow> rows)
         {
-            if (rows == null || rows.Count == 0)
-                return;
-            for (int i = 0; i < rows.Count; i++)
-                DeucarianEditorFieldRow.Draw(rows[i].Label, () => EditorGUILayout.LabelField(rows[i].Value ?? string.Empty, DeucarianEditorStyles.MutedLabel));
+            GameContentAuthoringProviderGUI.DrawSummaryRows(rows, true);
         }
 
         private static T DrawObjectField<T>(string label, T value) where T : UnityEngine.Object

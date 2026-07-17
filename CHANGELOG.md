@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 - 2026-07-17
 
+- Aligned package metadata and the playable sample with the portfolio contract; direct Deucarian dependencies now use the coordinated patch versions.
+- Replaced duplicated Weapon provider state, validation, reference, and summary code with shared Game Content Authoring primitives.
 - Converted the stable Weapon provider into a pack-aware Weapon / Tower lens supporting independent Weapon-only and Tower-only records, typed read-only projections, cross-lens identity, and the existing Project Content ScriptableObject workflow.
 
 ## 0.1.0
