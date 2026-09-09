@@ -15,9 +15,9 @@ namespace Deucarian.WeaponSystems.Editor
     {
         internal static void DrawHeader(string title, string subtitle, IReadOnlyList<DeucarianEditorStatusChip> chips)
         {
-            EditorGUILayout.LabelField(string.IsNullOrWhiteSpace(title) ? "Weapon" : title, DeucarianEditorStyles.SectionTitle);
+            DeucarianEditorTextGUI.LabelField(string.IsNullOrWhiteSpace(title) ? "Weapon" : title, DeucarianEditorStyles.SectionTitle);
             if (!string.IsNullOrWhiteSpace(subtitle))
-                EditorGUILayout.LabelField(subtitle, DeucarianEditorStyles.MutedLabel);
+                DeucarianEditorTextGUI.LabelField(subtitle, DeucarianEditorStyles.MutedLabel);
             DeucarianEditorStatusChipRow.Draw(chips);
         }
 
@@ -85,7 +85,7 @@ namespace Deucarian.WeaponSystems.Editor
         {
             if (selectedItem == null || selectedItem.ReverseReferences.Count == 0)
             {
-                EditorGUILayout.LabelField("No authored references found.", DeucarianEditorStyles.MutedLabel);
+                DeucarianEditorTextGUI.LabelField("No authored references found.", DeucarianEditorStyles.MutedLabel);
                 return;
             }
 
@@ -94,8 +94,8 @@ namespace Deucarian.WeaponSystems.Editor
                 GameContentLibraryReference reference = selectedItem.ReverseReferences[i];
                 context.Authoring.DrawInlineCard(() =>
                 {
-                    EditorGUILayout.LabelField(reference.Target.DisplayName, DeucarianEditorStyles.SectionTitle);
-                    EditorGUILayout.LabelField(reference.Target.Category + " - " + reference.Target.Id, DeucarianEditorStyles.MutedLabel);
+                    DeucarianEditorTextGUI.LabelField(reference.Target.DisplayName, DeucarianEditorStyles.SectionTitle);
+                    DeucarianEditorTextGUI.LabelField(reference.Target.Category + " - " + reference.Target.Id, DeucarianEditorStyles.MutedLabel);
                 });
             }
         }
@@ -127,7 +127,7 @@ namespace Deucarian.WeaponSystems.Editor
             T next = value;
             DeucarianEditorFieldRow.Draw(label, () =>
             {
-                next = (T)EditorGUILayout.ObjectField(value, typeof(T), false);
+                next = (T)DeucarianEditorInputGUI.ObjectField(value, typeof(T), false);
                 if (DeucarianEditorMiniToolbar.PingButton(next))
                     GUI.FocusControl(null);
             });
