@@ -17,7 +17,7 @@ namespace Deucarian.WeaponSystems.Editor
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField("Weapons", DeucarianEditorStyles.SectionTitle);
+                DeucarianEditorTextGUI.LabelField("Weapons", DeucarianEditorStyles.SectionTitle);
                 GUILayout.FlexibleSpace();
                 if (DeucarianEditorMiniToolbar.Button("Refresh", true, GUILayout.Width(62f), GUILayout.Height(22f)))
                     context.RefreshLibrary();
@@ -45,7 +45,7 @@ namespace Deucarian.WeaponSystems.Editor
             }
 
             if (shown == 0)
-                EditorGUILayout.LabelField(items.Count == 0 ? "No authored weapons found." : "No weapons match the current search.", DeucarianEditorStyles.MutedLabel);
+                DeucarianEditorTextGUI.LabelField(items.Count == 0 ? "No authored weapons found." : "No weapons match the current search.", DeucarianEditorStyles.MutedLabel);
             EditorGUILayout.EndScrollView();
         }
 

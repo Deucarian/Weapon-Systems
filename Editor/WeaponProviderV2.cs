@@ -60,7 +60,7 @@ namespace Deucarian.WeaponSystems.Editor
             WeaponDefinitionAsset asset = context.SelectedItem == null ? null : context.SelectedItem.Asset as WeaponDefinitionAsset;
             if (asset == null || state.EditingState == null || state.EditingContext == null)
             {
-                EditorGUILayout.LabelField("Select a weapon to edit.", DeucarianEditorStyles.MutedLabel);
+                DeucarianEditorTextGUI.LabelField("Select a weapon to edit.", DeucarianEditorStyles.MutedLabel);
                 return;
             }
 
