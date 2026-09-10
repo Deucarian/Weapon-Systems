@@ -106,7 +106,7 @@ namespace Deucarian.WeaponSystems.Editor
             context.DrawSection("Preview", () =>
             {
                 foreach (string line in WeaponDefinitionAssetCreator.GetPreviewLines(_state))
-                    EditorGUILayout.LabelField(line, context.MutedStyle);
+                    DeucarianEditorTextGUI.LabelField(line, context.MutedStyle);
                 GUILayout.Space(6f);
                 context.DrawValidation(report, "Ready to create one root WeaponDefinition asset with stats and presentation sub-assets.");
                 GUILayout.Space(8f);

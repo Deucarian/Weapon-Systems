@@ -78,11 +78,11 @@ namespace Deucarian.WeaponSystems.Editor
         {
             if (!GameContentRecordProjectionRegistry<WeaponContentRecordProjection>.TryProject(record, out WeaponContentRecordProjection projection))
             {
-                EditorGUILayout.HelpBox("No installed adapter exposes common Weapon / Tower fields for this record.", MessageType.Warning);
+                DeucarianEditorTextGUI.HelpBox("No installed adapter exposes common Weapon / Tower fields for this record.", MessageType.Warning);
                 return;
             }
 
-            EditorGUILayout.LabelField(projection.IsTower ? "Tower" : "Weapon", DeucarianEditorStyles.SectionTitle);
+            DeucarianEditorTextGUI.LabelField(projection.IsTower ? "Tower" : "Weapon", DeucarianEditorStyles.SectionTitle);
             GameContentRecordLensBrowser.DrawRow("Fire Mode", projection.FireMode);
             Row("Damage", projection.Damage);
             Row("Cooldown", projection.CooldownSeconds, "s");
@@ -98,10 +98,10 @@ namespace Deucarian.WeaponSystems.Editor
 
         private static void DrawPreview(GameContentRecordDescriptor record)
         {
-            EditorGUILayout.LabelField(record.DisplayName, DeucarianEditorStyles.SectionTitle);
+            DeucarianEditorTextGUI.LabelField(record.DisplayName, DeucarianEditorStyles.SectionTitle);
             if (!GameContentRecordProjectionRegistry<WeaponContentRecordProjection>.TryProject(record, out WeaponContentRecordProjection projection))
             {
-                EditorGUILayout.HelpBox("Preview adapter unavailable.", MessageType.Warning);
+                DeucarianEditorTextGUI.HelpBox("Preview adapter unavailable.", MessageType.Warning);
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace Deucarian.WeaponSystems.Editor
             Row("Interval", projection.CooldownSeconds, "s");
             Row("Range", projection.Range);
             GameContentRecordLensBrowser.DrawRow("Payload", Empty(projection.PayloadRecordId));
-            EditorGUILayout.HelpBox(
+            DeucarianEditorTextGUI.HelpBox(
                 string.IsNullOrWhiteSpace(projection.PresentationSummary)
                     ? "No prefab is assigned by this read-only source. The preview uses authored weapon values."
                     : projection.PresentationSummary,
