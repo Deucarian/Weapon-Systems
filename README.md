@@ -1,5 +1,15 @@
 # Deucarian Weapon Systems
 
+## Typed definition workflow
+
+The weapon definition reuses its attack. Setup registers the allowed slot once; equipping again preserves cooldowns. The sample routes direct attack intents to Combat.
+
+Start with the [Definition Workflow walkthrough](Documentation~/DefinitionWorkflow.md).
+Import **Definition Workflow** in Package Manager for a configured sample scene
+and short caller scripts. Definitions can be edited as assets or editable C# declarations; generated keys
+work in code and Inspector dropdowns.
+
+
 `com.deucarian.weapon-systems` orchestrates active weapons. It owns weapon slots, enable/disable state, fixed-tick cadence, direct/projectile fire modes, burst and volley descriptors, caller-supplied target candidates, and deterministic weapon intents.
 
 It does not own unlocks, upgrades, rewards, persistence, enemy discovery, projectile physics, UI, VFX, audio, tower placement, encounters, or ECS.

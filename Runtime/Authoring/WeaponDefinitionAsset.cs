@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Deucarian.WeaponSystems.Authoring
 {
-    [CreateAssetMenu(menuName = "Deucarian/Weapons/Weapon Definition", fileName = "WeaponDefinition")]
     public sealed class WeaponDefinitionAsset : ScriptableObject
     {
         [SerializeField] private string _id = "weapon.example.basic";
