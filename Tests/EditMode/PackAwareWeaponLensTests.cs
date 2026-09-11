@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Deucarian.GameContentAuthoring.Editor;
 using Deucarian.WeaponSystems.Editor;
 using NUnit.Framework;
+using UnityEngine.UIElements;
 
 namespace Deucarian.WeaponSystems.Tests
 {
@@ -46,7 +48,30 @@ namespace Deucarian.WeaponSystems.Tests
             Assert.That(projection.Damage, Is.EqualTo(14f));
             Assert.That(projection.CooldownSeconds, Is.EqualTo(0.75f));
             Assert.That(projection.PayloadRecordId, Is.EqualTo("projectile.arc-bolt"));
-            Assert.That(record.CanonicalKey.StableKey, Does.EndWith("::weapon.arc"));
+           Assert.That(record.CanonicalKey.StableKey, Does.EndWith("::weapon.arc"));
+            var adapter = new NativeProjectionAdapter(projection);
+            try
+            {
+                GameContentRecordProjectionRegistry<WeaponContentRecordProjection>.Register(adapter);
+                var view = new WeaponAuthoringProvider().CreateRecordDetails(record);
+                var labels = view.Query<Label>().ToList().Select(label => label.text).ToArray();
+                Assert.That(labels, Does.Contain("Ranks 1-8"));
+                Assert.That(labels, Does.Contain("Chain mutation"));
+                Assert.That(labels, Does.Contain("Arc evolution"));
+                Assert.That(labels, Does.Contain("Arc presentation"));
+                Assert.That(view.Q<FloatField>(), Is.Null, "Imported projections must remain read-only.");
+            }
+            finally { GameContentRecordProjectionRegistry<WeaponContentRecordProjection>.Unregister(adapter.AdapterId); }
+        }
+
+        private sealed class NativeProjectionAdapter : IGameContentRecordProjectionAdapter<WeaponContentRecordProjection>
+        {
+            private readonly WeaponContentRecordProjection projection;
+            public NativeProjectionAdapter(WeaponContentRecordProjection projection) { this.projection = projection; }
+            public string AdapterId { get; } = "native-record-test-" + Guid.NewGuid().ToString("N");
+            public int SortOrder => int.MinValue;
+            public bool TryProject(GameContentRecordDescriptor record, out WeaponContentRecordProjection value)
+            { value = projection; return record.CanonicalKey.Equals(projection.Record.CanonicalKey); }
         }
 
         private static GameContentRecordDescriptor Record(
