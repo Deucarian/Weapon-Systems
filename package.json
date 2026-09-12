@@ -1,6 +1,6 @@
 {
   "name": "com.deucarian.weapon-systems",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "displayName": "Deucarian Weapon Systems",
   "description": "Reusable weapon orchestration plus Unity authoring assets/providers for active weapon slots, fire cadence, direct/projectile modes, and deterministic weapon intents.",
   "unity": "6000.3",
@@ -13,18 +13,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "com.deucarian.gameplay-foundation": "0.1.1",
-    "com.deucarian.attacks": "0.1.1",
-    "com.deucarian.editor": "1.10.8",
-    "com.deucarian.projectiles": "0.2.1",
-    "com.deucarian.game-content-authoring": "0.2.4",
-    "com.deucarian.diagnostics": "0.2.3"
+    "com.deucarian.gameplay-foundation": "0.2.0",
+    "com.deucarian.attacks": "0.2.0",
+    "com.deucarian.editor": "1.12.0",
+    "com.deucarian.projectiles": "0.3.0",
+    "com.deucarian.game-content-authoring": "0.3.0",
+    "com.deucarian.diagnostics": "0.2.3",
+    "com.deucarian.combat": "0.2.0"
   },
   "samples": [
     {
       "displayName": "Basic Weapon Runtime",
       "description": "Creates one direct weapon and one projectile weapon and emits deterministic fire intents.",
       "path": "Samples~/BasicWeaponRuntime"
+    },
+    {
+      "displayName": "Definition Workflow",
+      "description": "Playable scene with typed C# calls, Inspector components, editable definitions and shared host ownership.",
+      "path": "Samples~/DefinitionWorkflow"
     }
   ]
 }

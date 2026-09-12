@@ -1,0 +1,12 @@
+{
+  "name": "Deucarian.WeaponSystems.Samples.DefinitionWorkflow",
+  "references": [
+    "Deucarian.WeaponSystems",
+    "Deucarian.WeaponSystems.Authoring",
+    "Deucarian.Attacks",
+    "Deucarian.Attacks.Authoring",
+    "Deucarian.Combat",
+    "Deucarian.Combat.Unity",
+    "Deucarian.GameplayFoundation"
+  ]
+}

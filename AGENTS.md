@@ -24,6 +24,8 @@ Allowed dependency shape:
 
 - Runtime weapon orchestration may depend on Gameplay Foundation, Attacks, and Projectiles.
 - Authoring/editor surfaces may depend on Editor and Game Content Authoring.
+- Samples may compose Combat's existing actor/host and damage definition to
+  demonstrate weapon intents; damage resolution remains in Combat.
 
 Required dependencies and why:
 
@@ -32,6 +34,7 @@ Required dependencies and why:
 - `com.deucarian.editor`: shared editor shell/resources for authoring surfaces.
 - `com.deucarian.projectiles`: projectile weapon mode integration points.
 - `com.deucarian.game-content-authoring`: provider registration and validation UI for weapon content.
+- `com.deucarian.combat`: configured sample targets and authored damage definitions.
 
 Optional/version-defined dependencies:
 
