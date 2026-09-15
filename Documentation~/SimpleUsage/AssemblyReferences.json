@@ -1,0 +1,16 @@
+{
+  "name": "Deucarian.WeaponSystems.Samples.SimpleUsage",
+  "rootNamespace": "Deucarian.WeaponSystems.Samples.SimpleUsage",
+  "references": [
+    "Deucarian.WeaponSystems"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

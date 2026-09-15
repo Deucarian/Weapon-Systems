@@ -17,6 +17,30 @@ namespace Deucarian.WeaponSystems.Tests
     public sealed class WeaponSystemsTests
     {
         [Test]
+        public void HostReequipDoesNotResetCooldownAndDestroyLeavesBorrowedRuntimeAlive()
+        {
+            var go = new GameObject("weapons");
+            var runtime = Runtime(Projector());
+            try
+            {
+                var host = go.AddComponent<WeaponHost>();
+                var slot = new HostSlotKey();
+                var weapon = new HostWeaponKey();
+                host.Configure(runtime, () => Source(), new[] { slot });
+                Assert.That(host.Equip(slot, weapon).Status, Is.EqualTo(WeaponEquipStatus.Equipped));
+                Assert.That(host.Fire(slot, Request()).Succeeded, Is.True);
+                Assert.That(host.Equip(slot, weapon).Status, Is.EqualTo(WeaponEquipStatus.AlreadyEquipped));
+                Assert.That(host.Fire(slot, Request()).FailureReason, Is.EqualTo(WeaponFailureReason.NotReady));
+                Object.DestroyImmediate(go);
+                runtime.Tick(3);
+                Assert.That(runtime.TryFire(new WeaponSlotId(slot.Id), Request()).Succeeded, Is.True);
+            }
+            finally { if (go != null) Object.DestroyImmediate(go); }
+        }
+        private sealed class HostSlotKey : WeaponSlotKey { public HostSlotKey() : base("slot.host") { } }
+        private sealed class HostWeaponKey : WeaponKey { public HostWeaponKey() : base(ProjectileWeaponId.Value) { } }
+
+        [Test]
         public void DefinitionRejectsInvalidInput()
         {
             var valid = new WeaponDefinition(new WeaponDefinitionId("weapon.valid"), WeaponFireMode.DirectAttack, AttackId, 1);

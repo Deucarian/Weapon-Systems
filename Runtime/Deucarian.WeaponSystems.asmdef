@@ -4,7 +4,8 @@
   "references": [
     "Deucarian.GameplayFoundation",
     "Deucarian.Attacks",
-    "Deucarian.Projectiles"
+    "Deucarian.Projectiles",
+    "Deucarian.Diagnostics"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

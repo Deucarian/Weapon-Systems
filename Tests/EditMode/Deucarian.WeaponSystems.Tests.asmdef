@@ -15,7 +15,8 @@
     "Deucarian.DefenseGames",
     "Deucarian.WorldSpawning",
     "Deucarian.WorldNavigation",
-    "Deucarian.GameContentAuthoring.Editor"
+    "Deucarian.GameContentAuthoring.Editor",
+    "Deucarian.Diagnostics"
   ],
   "includePlatforms": [
     "Editor"

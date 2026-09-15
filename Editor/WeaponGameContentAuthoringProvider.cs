@@ -19,8 +19,12 @@ namespace Deucarian.WeaponSystems.Editor
         }
     }
 
-    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider, IGameContentAuthoringSurfaceProvider, IGameContentAuthoringLensProvider
+    internal sealed class WeaponAuthoringProvider : IGameContentAuthoringProvider, IGameContentAuthoringSurfaceProvider, IGameContentAuthoringLensProvider, IGameContentToolkitAuthoringProvider, IGameContentToolkitRecordProvider
     {
+        public UnityEngine.UIElements.VisualElement CreateEditor(GameContentAuthoringSurfaceContext context) => WeaponToolkitAuthoring.Create(context);
+        public UnityEngine.UIElements.VisualElement CreateRecordDetails(GameContentRecordDescriptor record) => WeaponRecordToolkit.Weapon(record);
+        public string RecordIconId => "sword";
+
         private readonly WeaponAuthoringState _state = new WeaponAuthoringState();
         private readonly WeaponGameContentPreviewController _preview = new WeaponGameContentPreviewController();
         private readonly WeaponProviderV2State _v2State = new WeaponProviderV2State();
